@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelPress - Free Bulk Image Compressor, Resizer & WebP Converter</title>
+    <meta name="monetag" content="0ea4b5b068fd42e91e672e39c46a9780">
+    <script src="https://quge5.com/88/tag.min.js" data-zone="307819" async data-cfasync="false"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- JSZip for Batch Downloading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between font-sans">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl font-bold text-xl flex items-center justify-center w-10 h-10">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <span class="text-xl font-extrabold tracking-tight text-slate-900">Pixel<span class="text-indigo-600">Press</span></span>
+            </div>
+            <span class="text-xs font-medium bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-100">100% Client-Side & Secure</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Column: Settings & Controls (1 span) -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 h-fit lg:sticky lg:top-24">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-indigo-600"></i> Compression Settings
+            </h2>
+
+            <!-- Quality Slider -->
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm font-medium">
+                    <span class="text-slate-600">Quality:</span>
+                    <span id="qualityVal" class="text-indigo-600 font-bold">80%</span>
+                </div>
+                <input type="range" id="qualityRange" min="10" max="100" value="80" 
+                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                <p class="text-xs text-slate-500">Lower quality = smaller file size.</p>
+            </div>
+
+            <!-- Resize Percentage or Scale -->
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm font-medium">
+                    <span class="text-slate-600">Resize Scale:</span>
+                    <span id="scaleVal" class="text-indigo-600 font-bold">100% (Original)</span>
+                </div>
+                <input type="range" id="scaleRange" min="10" max="100" value="100" 
+                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+            </div>
+
+            <!-- Output Format -->
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-slate-600">Convert Format:</label>
+                <select id="outputFormat" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <option value="image/jpeg">Keep Original / JPEG</option>
+                    <option value="image/webp" selected>WebP (Recommended for Web)</option>
+                    <option value="image/png">PNG</option>
+                </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="pt-4 border-t border-slate-100 flex flex-col gap-3">
+                <button id="processBtn" disabled class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Process Images
+                </button>
+                <button id="downloadAllBtn" disabled class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-zipper"></i> Download All (.zip)
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Column: Upload & Output Grid (2 span) -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Drag & Drop Dropzone -->
+            <div id="dropzone" class="border-2 border-dashed border-indigo-300 bg-white hover:border-indigo-500 rounded-2xl p-8 text-center cursor-pointer transition shadow-sm flex flex-col items-center justify-center relative">
+                <input type="file" id="imageInput" multiple accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                <div class="bg-indigo-50 text-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 mb-1">Drag & drop your images here</h3>
+                <p class="text-sm text-slate-500 mb-4">Supports PNG, JPG, JPEG, WEBP (Batch upload enabled)</p>
+                <span class="bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm">Browse Files</span>
+            </div>
+
+            <!-- Queue Header -->
+            <div class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h3 class="font-bold text-slate-800">Uploaded Queue</h3>
+                    <p id="queueCount" class="text-xs text-slate-500">0 images selected</p>
+                </div>
+                <button id="clearAllBtn" class="text-rose-600 hover:text-rose-700 text-sm font-semibold hidden flex items-center gap-1">
+                    <i class="fa-solid fa-trash-can"></i> Clear All
+                </button>
+            </div>
+
+            <!-- Image Results List Container -->
+            <div id="resultsList" class="space-y-3">
+                <!-- Dynamically added items will appear here -->
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+        <p>&copy; 2026 PixelPress. Built for maximum web speed and SEO performance.</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const dropzone = document.getElementById('dropzone');
+        const resultsList = document.getElementById('resultsList');
+        const processBtn = document.getElementById('processBtn');
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const queueCount = document.getElementById('queueCount');
+        
+        const qualityRange = document.getElementById('qualityRange');
+        const qualityVal = document.getElementById('qualityVal');
+        const scaleRange = document.getElementById('scaleRange');
+        const scaleVal = document.getElementById('scaleVal');
+        const outputFormat = document.getElementById('outputFormat');
+
+        let imageFiles = []; // Stores objects { file, originalSize, processedBlob, processedUrl, name, newSize }
+
+        // Update range slider text values
+        qualityRange.addEventListener('input', (e) => qualityVal.textContent = e.target.value + '%');
+        scaleRange.addEventListener('input', (e) => scaleVal.textContent = e.target.value + '%');
+
+        // Handle File Selection
+        imageInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+        // Drag and Drop Visual Effects
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => { e.preventDefault(); dropzone.classList.add('bg-indigo-50/50'); });
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => { e.preventDefault(); dropzone.classList.remove('bg-indigo-50/50'); });
+        });
+        dropzone.addEventListener('drop', (e) => {
+            if (e.dataTransfer.files) handleFiles(e.dataTransfer.files);
+        });
+
+        function handleFiles(files) {
+            for (let file of files) {
+                if (!file.type.startsWith('image/')) continue;
+                imageFiles.push({
+                    file: file,
+                    name: file.name,
+                    originalSize: file.size,
+                    processedBlob: null,
+                    processedUrl: null,
+                    newSize: null
+                });
+            }
+            updateQueueUI();
+        }
+
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024, dm = decimals < 0 ? 0 : decimals, sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        function updateQueueUI() {
+            queueCount.textContent = `${imageFiles.length} images selected`;
+            if (imageFiles.length > 0) {
+                processBtn.removeAttribute('disabled');
+                clearAllBtn.classList.remove('hidden');
+            } else {
+                processBtn.setAttribute('disabled', 'true');
+                downloadAllBtn.setAttribute('disabled', 'true');
+                clearAllBtn.classList.add('hidden');
+            }
+
+            resultsList.innerHTML = '';
+            imageFiles.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between gap-4';
+                div.innerHTML = `
+                    <div class="flex items-center gap-3 truncate">
+                        <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center font-bold text-slate-400 shrink-0">
+                            <i class="fa-regular fa-image"></i>
+                        </div>
+                        <div class="truncate">
+                            <h4 class="font-semibold text-sm text-slate-800 truncate">${item.name}</h4>
+                            <p class="text-xs text-slate-500">Original: ${formatBytes(item.originalSize)} 
+                                ${item.newSize ? `<span class="text-emerald-600 font-bold ml-2">➔ ${formatBytes(item.newSize)}</span>` : ''}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        ${item.processedUrl ? `
+                            <a href="${item.processedUrl}" download="compressed-${item.name.split('.')[0]}.${outputFormat.value.split('/')[1]}" 
+                                class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 p-2.5 rounded-xl transition text-sm font-semibold flex items-center gap-1">
+                                <i class="fa-solid fa-download"></i> Download
+                            </a>
+                        ` : `<span class="text-xs text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg font-medium">Pending</span>`}
+                        <button onclick="removeImage(${index})" class="text-slate-400 hover:text-rose-600 p-2 transition">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                `;
+                resultsList.appendChild(div);
+            });
+        }
+
+        window.removeImage = function(index) {
+            imageFiles.splice(index, 1);
+            updateQueueUI();
+        }
+
+        clearAllBtn.addEventListener('click', () => {
+            imageFiles = [];
+            updateQueueUI();
+        });
+
+        // Process All Images using HTML5 Canvas
+        processBtn.addEventListener('click', async () => {
+            processBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
+            processBtn.setAttribute('disabled', 'true');
+
+            const quality = parseInt(qualityRange.value) / 100;
+            const scale = parseInt(scaleRange.value) / 100;
+            const format = outputFormat.value;
+
+            for (let item of imageFiles) {
+                await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const targetWidth = Math.round(img.width * scale);
+                            const targetHeight = Math.round(img.height * scale);
+
+                            canvas.width = targetWidth;
+                            canvas.height = targetHeight;
+
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+                            canvas.toBlob((blob) => {
+                                item.processedBlob = blob;
+                                item.processedUrl = URL.createObjectURL(blob);
+                                item.newSize = blob.size;
+                                resolve();
+                            }, format, quality);
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(item.file);
+                });
+            }
+
+            processBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Process Images`;
+            processBtn.removeAttribute('disabled');
+            downloadAllBtn.removeAttribute('disabled');
+            updateQueueUI();
+        });
+
+        // Download All as ZIP using JSZip
+        downloadAllBtn.addEventListener('click', async () => {
+            const zip = new JSZip();
+            const folder = zip.folder("compressed-images");
+
+            imageFiles.forEach((item, index) => {
+                if (item.processedBlob) {
+                    const ext = outputFormat.value.split('/')[1];
+                    const fileName = `compressed_${index + 1}_${item.name.substring(0, item.name.lastIndexOf('.'))}.${ext}`;
+                    folder.file(fileName, item.processedBlob);
+                }
+            });
+
+            downloadAllBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Zipping...`;
+            const content = await zip.generateAsync({ type: "blob" });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = "PixelPress_Images.zip";
+            link.click();
+
+            downloadAllBtn.innerHTML = `<i class="fa-solid fa-file-zipper"></i> Download All (.zip)`;
+        });
+    </script>
+</body>
+</html>

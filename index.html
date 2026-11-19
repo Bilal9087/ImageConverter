@@ -3,32 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>VU Assignment Image Converter & Compressor - PixelPress</title>
+    <title>PixelPress - Free Bulk Image Compressor, Resizer & WebP Converter</title>
+    <meta name="description" content="Compress, resize, and convert multiple PNG, JPG, and WebP images online for free with PixelPress. 100% client-side, fast, secure bulk image optimizer with ZIP download.">
+    <meta name="keywords" content="bulk image compressor, free image resizer, convert png to webp, jpg compressor online, reduce image size in kb, offline image optimizer, PixelPress">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://imageconverter-zeta.vercel.app/">
+
+    <!-- Open Graph / Social Sharing Meta Tags -->
+    <meta property="og:title" content="PixelPress - Free Bulk Image Compressor, Resizer & WebP Converter">
+    <meta property="og:description" content="Optimize dozens of images at once directly in your browser. Zero server uploads, 100% private, and instant ZIP download.">
+    <meta property="og:url" content="https://imageconverter-zeta.vercel.app/">
+    <meta property="og:type" content="website">
+
+    <!-- Structured Data (Schema.org) for Google Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PixelPress",
+      "url": "https://imageconverter-zeta.vercel.app/",
+      "description": "Free client-side bulk image compressor, resizer, and WebP/JPEG/PNG format converter.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- JSZip for Batch Downloading -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- ================= VU SEO Meta Tags Start ================= -->
-<title>VU Assignment Image Converter & Compressor - PixelPress</title>
-<meta name="description" content="VU Assignment Image Converter & Compressor for Virtual University (VU) students. Easily compress assignment screenshots for VULMS upload.">
-<meta name="keywords" content="vu assignment converter, vulms image compressor, webp to jpg converter online, compress image for vu assignment, vu assignment screenshot resizer, pixelpress image tool, free bulk image compressor">
-
-<!-- Open Graph / Facebook (For WhatsApp & Facebook Group Sharing Groups) -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://vercel.app">
-<meta property="og:title" content="VU Assignment Image Converter & Compressor - Free & No Ads">
-<meta property="og:description" content="Built specifically for Virtual University students. Instantly convert and compress your assignment screenshots and files to meet VULMS requirements.">
-<meta property="og:image" content="https://vercel.appog-image.png">
-
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://vercel.app">
-<meta property="twitter:title" content="VU Assignment Image Converter & Compressor">
-<meta property="twitter:description" content="Easily resize and convert assignment images for VULMS. 100% free and secure client-side tool.">
-<!-- ================= VU SEO Meta Tags End ================= -->
-
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between font-sans">
 
@@ -46,94 +56,169 @@
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full space-y-12">
         
-        <!-- Left Column: Settings & Controls (1 span) -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 h-fit lg:sticky lg:top-24">
-            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-sliders text-indigo-600"></i> Compression Settings
-            </h2>
+        <!-- Tool Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Settings & Controls (1 span) -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 h-fit lg:sticky lg:top-24">
+                <h1 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-indigo-600"></i> Compression Settings
+                </h1>
 
-            <!-- Quality Slider -->
-            <div class="space-y-2">
-                <div class="flex justify-between text-sm font-medium">
-                    <span class="text-slate-600">Quality:</span>
-                    <span id="qualityVal" class="text-indigo-600 font-bold">80%</span>
+                <!-- Quality Slider -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-sm font-medium">
+                        <span class="text-slate-600">Quality:</span>
+                        <span id="qualityVal" class="text-indigo-600 font-bold">80%</span>
+                    </div>
+                    <input type="range" id="qualityRange" min="10" max="100" value="80" 
+                        class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                    <p class="text-xs text-slate-500">Lower quality = smaller file size.</p>
                 </div>
-                <input type="range" id="qualityRange" min="10" max="100" value="80" 
-                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                <p class="text-xs text-slate-500">Lower quality = smaller file size.</p>
-            </div>
 
-            <!-- Resize Percentage or Scale -->
-            <div class="space-y-2">
-                <div class="flex justify-between text-sm font-medium">
-                    <span class="text-slate-600">Resize Scale:</span>
-                    <span id="scaleVal" class="text-indigo-600 font-bold">100% (Original)</span>
+                <!-- Resize Percentage or Scale -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-sm font-medium">
+                        <span class="text-slate-600">Resize Scale:</span>
+                        <span id="scaleVal" class="text-indigo-600 font-bold">100% (Original)</span>
+                    </div>
+                    <input type="range" id="scaleRange" min="10" max="100" value="100" 
+                        class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
                 </div>
-                <input type="range" id="scaleRange" min="10" max="100" value="100" 
-                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+
+                <!-- Output Format -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-slate-600">Convert Format:</label>
+                    <select id="outputFormat" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <option value="image/jpeg">Keep Original / JPEG</option>
+                        <option value="image/webp" selected>WebP (Recommended for Web)</option>
+                        <option value="image/png">PNG</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="pt-4 border-t border-slate-100 flex flex-col gap-3">
+                    <button id="processBtn" disabled class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Process Images
+                    </button>
+                    <button id="downloadAllBtn" disabled class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-file-zipper"></i> Download All (.zip)
+                    </button>
+                </div>
+
+                <!-- Monetag Direct Link Button Box -->
+                <div class="pt-2">
+                    <a href="https://uplcm.com/4/12224980" target="_blank" rel="noopener noreferrer" class="w-full bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white text-xs font-bold py-3 px-4 rounded-xl shadow-sm transition duration-200 flex items-center justify-center gap-2 text-center">
+                        <i class="fa-solid fa-gift"></i> Support Us & Get Free Tools
+                    </a>
+                </div>
             </div>
 
-            <!-- Output Format -->
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-slate-600">Convert Format:</label>
-                <select id="outputFormat" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
-                    <option value="image/jpeg">Keep Original / JPEG</option>
-                    <option value="image/webp" selected>WebP (Recommended for Web)</option>
-                    <option value="image/png">PNG</option>
-                </select>
-            </div>
+            <!-- Right Column: Upload & Output Grid (2 span) -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Drag & Drop Dropzone -->
+                <div id="dropzone" class="border-2 border-dashed border-indigo-300 bg-white hover:border-indigo-500 rounded-2xl p-8 text-center cursor-pointer transition shadow-sm flex flex-col items-center justify-center relative">
+                    <input type="file" id="imageInput" multiple accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                    <div class="bg-indigo-50 text-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-slate-800 mb-1">Drag & drop your images here</h2>
+                    <p class="text-sm text-slate-500 mb-4">Supports PNG, JPG, JPEG, WEBP (Batch upload enabled)</p>
+                    <span class="bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm">Browse Files</span>
+                </div>
 
-            <!-- Action Buttons -->
-            <div class="pt-4 border-t border-slate-100 flex flex-col gap-3">
-                <button id="processBtn" disabled class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-sm flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Process Images
-                </button>
-                <button id="downloadAllBtn" disabled class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-sm flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-file-zipper"></i> Download All (.zip)
-                </button>
-            </div>
+                <!-- Queue Header -->
+                <div class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <div>
+                        <h3 class="font-bold text-slate-800">Uploaded Queue</h3>
+                        <p id="queueCount" class="text-xs text-slate-500">0 images selected</p>
+                    </div>
+                    <button id="clearAllBtn" class="text-rose-600 hover:text-rose-700 text-sm font-semibold hidden flex items-center gap-1">
+                        <i class="fa-solid fa-trash-can"></i> Clear All
+                    </button>
+                </div>
 
-            <!-- Monetag Direct Link Button Box -->
-            <div class="pt-2">
-                <a href="https://uplcm.com/4/12224980" target="_blank" class="w-full bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white text-xs font-bold py-3 px-4 rounded-xl shadow-sm transition duration-200 flex items-center justify-center gap-2 text-center">
-                    <i class="fa-solid fa-gift"></i> Support Us & Get Free Tools
-                </a>
+                <!-- Image Results List Container -->
+                <div id="resultsList" class="space-y-3">
+                    <!-- Dynamically added items will appear here -->
+                </div>
+
             </div>
         </div>
 
-        <!-- Right Column: Upload & Output Grid (2 span) -->
-        <div class="lg:col-span-2 space-y-6">
-            
-            <!-- Drag & Drop Dropzone -->
-            <div id="dropzone" class="border-2 border-dashed border-indigo-300 bg-white hover:border-indigo-500 rounded-2xl p-8 text-center cursor-pointer transition shadow-sm flex flex-col items-center justify-center relative">
-                <input type="file" id="imageInput" multiple accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
-                <div class="bg-indigo-50 text-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
+        <!-- SEO Guide & FAQ Section -->
+        <section class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-8">
+            <div class="space-y-3">
+                <h2 class="text-2xl font-extrabold text-slate-900">Free Online Bulk Image Compressor, Resizer & WebP Converter</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    <strong>PixelPress</strong> is a fast, browser-based image optimization tool built for web developers, bloggers, graphic designers, and students. Whether you need to reduce image file sizes in KB for online admission portals, speed up your website Core Web Vitals, or batch-convert heavy PNG and JPEG photos into lightweight WebP format, PixelPress handles everything locally on your device in seconds.
+                </p>
+            </div>
+
+            <!-- Key Features Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-5 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
+                    <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i> 100% Private & Client-Side
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Unlike traditional converters, your photos are never uploaded to any external server. All compression and resizing happens directly inside your browser using HTML5 Canvas technology.
+                    </p>
                 </div>
-                <h3 class="text-lg font-bold text-slate-800 mb-1">Drag & drop your images here</h3>
-                <p class="text-sm text-slate-500 mb-4">Supports PNG, JPG, JPEG, WEBP (Batch upload enabled)</p>
-                <span class="bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm">Browse Files</span>
-            </div>
-
-            <!-- Queue Header -->
-            <div class="flex justify-between items-center bg-white px-6 py-4 rounded-2xl border border-slate-200 shadow-sm">
-                <div>
-                    <h3 class="font-bold text-slate-800">Uploaded Queue</h3>
-                    <p id="queueCount" class="text-xs text-slate-500">0 images selected</p>
+                <div class="p-5 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
+                    <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-indigo-600"></i> Bulk Compression & ZIP Export
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Select dozens of images at once, apply your custom quality and dimension scale settings, and download all optimized files bundled neatly into a single ZIP archive.
+                    </p>
                 </div>
-                <button id="clearAllBtn" class="text-rose-600 hover:text-rose-700 text-sm font-semibold hidden flex items-center gap-1">
-                    <i class="fa-solid fa-trash-can"></i> Clear All
-                </button>
+                <div class="p-5 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
+                    <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-gauge-high text-indigo-600"></i> Next-Gen WebP Conversion
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Convert standard JPG and PNG files into Google's recommended WebP format to cut file sizes by up to 70% while preserving crisp visual clarity for faster SEO rankings.
+                    </p>
+                </div>
             </div>
 
-            <!-- Image Results List Container -->
-            <div id="resultsList" class="space-y-3">
-                <!-- Dynamically added items will appear here -->
+            <!-- How to Use -->
+            <div class="space-y-3">
+                <h3 class="text-lg font-bold text-slate-900">How to Compress & Resize Multiple Images Online</h3>
+                <ol class="list-decimal list-inside text-sm text-slate-600 space-y-2">
+                    <li><strong>Upload Your Images:</strong> Drag and drop your JPG, PNG, or WebP files into the upload box above, or click <em>Browse Files</em> to select multiple images from your device.</li>
+                    <li><strong>Adjust Quality & Scale:</strong> Use the <em>Quality</em> slider (80% is ideal for web speed) and <em>Resize Scale</em> slider to reduce pixel dimensions if needed.</li>
+                    <li><strong>Choose Output Format:</strong> Select <em>WebP</em> for maximum compression, or keep <em>JPEG / PNG</em> based on your form or website requirements.</li>
+                    <li><strong>Process & Download:</strong> Click <em>Process Images</em> to optimize the entire queue, then save files individually or click <em>Download All (.zip)</em>.</li>
+                </ol>
             </div>
 
-        </div>
+            <!-- Frequently Asked Questions -->
+            <div class="space-y-4 pt-4 border-t border-slate-100">
+                <h3 class="text-lg font-bold text-slate-900">Frequently Asked Questions (FAQs)</h3>
+                <div class="space-y-3 text-sm">
+                    <div>
+                        <h4 class="font-bold text-slate-800">Is PixelPress completely free to use?</h4>
+                        <p class="text-slate-600 mt-1">Yes, PixelPress is 100% free with no daily file limits, watermarks, or account registration required.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Are my personal photos or documents safe?</h4>
+                        <p class="text-slate-600 mt-1">Completely safe. Because PixelPress processes images locally inside your web browser, your files never leave your computer or smartphone.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">How can I reduce an image size under 50KB or 100KB for online forms?</h4>
+                        <p class="text-slate-600 mt-1">Upload your photo, lower the <em>Quality</em> slider to around 50%–65%, and reduce the <em>Resize Scale</em> to 60%–75%. Click Process Images to check the exact new file size before downloading.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Why should I convert images to WebP format?</h4>
+                        <p class="text-slate-600 mt-1">WebP images load significantly faster than traditional JPEG and PNG files, improving website page speed scores and search engine optimization (SEO).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
     </main>
 
